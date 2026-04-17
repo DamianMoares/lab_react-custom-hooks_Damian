@@ -1,19 +1,12 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-export default function useFetch(url) {
-  const [data, setData] = useState([]);
+export function useFetch(url) {
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!url) {
-      setLoading(false);
-      setData([]);
-      setError(null);
-      return;
-    }
-
     const controller = new AbortController();
 
     const fetchData = async () => {
@@ -23,9 +16,9 @@ export default function useFetch(url) {
         setData(response.data);
         setError(null);
       } catch (err) {
-        if (err.name === "CanceledError" || err.name === "AbortError") return;
+        if (err.name === 'CanceledError' || err.name === 'AbortError') return;
         setError(err);
-        setData([]);
+        setData(null);
       } finally {
         setLoading(false);
       }
@@ -33,7 +26,9 @@ export default function useFetch(url) {
 
     fetchData();
 
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+    };
   }, [url]);
 
   return { data, loading, error };

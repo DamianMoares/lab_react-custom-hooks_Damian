@@ -1,55 +1,27 @@
-import { useState } from 'react';
-import useFetch from '../hooks/useFetch';
+import { useFetch } from '../hooks/useFetch';
 
 export default function UserGists() {
-  const [username, setUsername] = useState('');
-  const [searchUsername, setSearchUsername] = useState('');
-
+  const username = 'gaearon';
   const { data: gists, loading, error } = useFetch(
-    searchUsername ? `https://api.github.com/users/${searchUsername}/gists` : null
+    `https://api.github.com/users/${username}/gists`
   );
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSearchUsername(username.trim());
-  };
+  if (loading) return <p>Loading {username}'s gists...</p>;
+  if (error) return <p>Error fetching gists: {error.message}</p>;
 
   return (
     <div>
-      <h2>Gists de Usuario</h2>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Ingresa un username de GitHub"
-        />
-        <button type="submit">Buscar</button>
-      </form>
-
-      {loading && searchUsername && <p>Cargando gists de {searchUsername}...</p>}
-      {error && <p>Error: {error.message}</p>}
-
-      {!loading && !error && searchUsername && (
-        <>
-          {gists.length === 0 ? (
-            <p>No hay gists públicos.</p>
-          ) : (
-            <ul>
-              {gists.map((gist) => (
-                <li key={gist.id}>
-                  <strong>{gist.description || 'Sin descripción'}</strong>
-                  <br />
-                  <a href={gist.html_url} target="_blank" rel="noreferrer">
-                    Ver en GitHub
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
-      )}
+      <h2>{username}'s Gists</h2>
+      <ul>
+        {Array.isArray(gists) &&
+          gists.map((gist) => (
+            <li key={gist.id}>
+              <a href={gist.html_url} target="_blank" rel="noopener noreferrer">
+                {gist.description || 'No description'}
+              </a>
+            </li>
+          ))}
+      </ul>
     </div>
   );
 }
