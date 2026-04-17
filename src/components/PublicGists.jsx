@@ -1,6 +1,6 @@
 import { useFetch } from '../hooks/useFetch';
 
-export default function PublicGists() {
+const PublicGists = () => {
   const { data: gists, loading, error } = useFetch('https://api.github.com/gists/public');
 
   if (loading) return <p>Loading public gists...</p>;
@@ -21,4 +21,6 @@ export default function PublicGists() {
       </ul>
     </div>
   );
-}
+};
+
+export default PublicGists;

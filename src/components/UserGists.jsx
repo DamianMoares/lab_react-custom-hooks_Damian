@@ -1,10 +1,8 @@
 import { useFetch } from '../hooks/useFetch';
 
-export default function UserGists() {
+const UserGists = () => {
   const username = 'gaearon';
-  const { data: gists, loading, error } = useFetch(
-    `https://api.github.com/users/${username}/gists`
-  );
+  const { data: gists, loading, error } = useFetch(`https://api.github.com/users/${username}/gists`);
 
   if (loading) return <p>Loading {username}'s gists...</p>;
   if (error) return <p>Error fetching gists: {error.message}</p>;
@@ -24,4 +22,6 @@ export default function UserGists() {
       </ul>
     </div>
   );
-}
+};
+
+export default UserGists;
