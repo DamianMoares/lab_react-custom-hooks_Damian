@@ -1,31 +1,25 @@
-import { useFetch } from "../hooks/useFetch";
+import useFetch from '../hooks/useFetch';
 
-const PublicGists = () => {
+export default function PublicGists() {
   const { data: gists, loading, error } = useFetch(
-    "https://api.github.com/gists/public"
+    'https://api.github.com/gists/public?page=1&per_page=5'
   );
 
-  if (loading) return <p>Loading public gists...</p>;
-  if (error) return <p>Error fetching gists: {error.message}</p>;
+  if (loading) return <p>Cargando gists públicos...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
-      <h2>Public Gists</h2>
+      <h2>Gists Públicos</h2>
       <ul>
-        {gists.map((gist) => (
+        {gists.map(gist => (
           <li key={gist.id}>
-            <a
-              href={gist.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {gist.description || "No description"}
-            </a>
+            <strong>{gist.description || 'Sin descripción'}</strong>
+            <br />
+            <a href={gist.html_url} target="_blank">Ver en GitHub</a>
           </li>
         ))}
       </ul>
     </div>
   );
-};
-
-export default PublicGists;
+}
