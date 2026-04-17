@@ -1,6 +1,6 @@
-import PublicGists from "./components/PublicGists";
-import UserGists from "./components/UserGists";
-import "./App.css";
+import PublicGists from './components/PublicGists';
+import UserGists from './components/UserGists';
+import './App.css';
 
 function App() {
   return (

@@ -1,17 +1,17 @@
-import { useState } from "react";
-import useFetch from "../hooks/useFetch";
+import { useState } from 'react';
+import useFetch from '../hooks/useFetch';
 
 export default function UserGists() {
-  const [username, setUsername] = useState("");
-  const [query, setQuery] = useState("");
+  const [username, setUsername] = useState('');
+  const [searchUsername, setSearchUsername] = useState('');
 
   const { data: gists, loading, error } = useFetch(
-    query ? `https://api.github.com/users/${query}/gists` : null
+    searchUsername ? `https://api.github.com/users/${searchUsername}/gists` : null
   );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setQuery(username);
+    setSearchUsername(username.trim());
   };
 
   return (
@@ -20,6 +20,7 @@ export default function UserGists() {
 
       <form onSubmit={handleSubmit}>
         <input
+          type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Ingresa un username de GitHub"
@@ -27,21 +28,27 @@ export default function UserGists() {
         <button type="submit">Buscar</button>
       </form>
 
-      {loading && query && <p>Cargando gists de {query}...</p>}
+      {loading && searchUsername && <p>Cargando gists de {searchUsername}...</p>}
       {error && <p>Error: {error.message}</p>}
 
-      {!loading && !error && query && (
-        <ul>
-          {gists.map((gist) => (
-            <li key={gist.id}>
-              <strong>{gist.description || "Sin descripción"}</strong>
-              <br />
-              <a href={gist.html_url} target="_blank" rel="noreferrer">
-                Ver en GitHub
-              </a>
-            </li>
-          ))}
-        </ul>
+      {!loading && !error && searchUsername && (
+        <>
+          {gists.length === 0 ? (
+            <p>No hay gists públicos.</p>
+          ) : (
+            <ul>
+              {gists.map((gist) => (
+                <li key={gist.id}>
+                  <strong>{gist.description || 'Sin descripción'}</strong>
+                  <br />
+                  <a href={gist.html_url} target="_blank" rel="noreferrer">
+                    Ver en GitHub
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </div>
   );

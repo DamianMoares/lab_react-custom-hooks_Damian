@@ -7,7 +7,12 @@ export default function useFetch(url) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!url) return;
+    if (!url) {
+      setLoading(false);
+      setData([]);
+      setError(null);
+      return;
+    }
 
     const controller = new AbortController();
 
@@ -18,7 +23,7 @@ export default function useFetch(url) {
         setData(response.data);
         setError(null);
       } catch (err) {
-        if (err.name === "CanceledError") return;
+        if (err.name === "CanceledError" || err.name === "AbortError") return;
         setError(err);
         setData([]);
       } finally {
